@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiscais Admin</title>
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Krona+One%3A400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> 
+    <style>
+        /* Estilos CSS */
+        html {
+            font-size: 62.5%;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #004767;
+            font-family: 'Roboto', sans-serif;
+            color: #D9D9D9;
+            font-size: 3rem;
+        }
+        .header-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+        }
+        .header {
+            width: 100%;
+            height: 80px;
+            background-color: #017CB7;
+        }
+        .content {
+            padding-top: 120px;
+            margin-left: 100px;
+        }
+        .menu-icons {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            margin-left: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .logout-icon {
+            margin-left: auto;
+            margin-right: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .menu-icon i, .logout-icon i {
+            font-size: 4rem;
+        }
+        .imagemTUB {
+            width: 170px;
+            height: 70px;
+            position: absolute;
+            top: 12px;
+            left: 100px;
+        }
+        .title-and-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 3rem;
+            color: #FFFFFF;
+        }
+        .create-button {
+            background-color: #01A7F5;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 100px;
+            margin-right: 100px;
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+        .fiscal-box {
+            background-color: #d9d9d9;
+            border-radius: 10px;
+            padding: 5px;
+            margin-top: 20px;
+            margin-right: 100px;
+            position: relative;
+        }
+        .fiscal-info {
+            font-size: 2rem;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .view-button {
+            background-color: #01A7F5;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+        /* Estilos do formulário */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #004767;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="submit"] {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        input[type="submit"] {
+            background-color: #01A7F5;
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+        }
+        .menu-lateral {
+            position: fixed;
+            top: 80px;
+            left: -415px; /* Inicialmente fora da tela */
+            width: 372px;
+            height: 100vh;
+            background-color: #017CB7;
+            padding: 20px;
+            transition: left 0.3s ease;
+            z-index: 9999;
+        }
+
+        .menu-lateral a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+        .menu-lateral.menu-aberto {
+            left: 0; /* Quando aberto, aparece na tela */
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="header">
+            <div class="menu-icons">
+                <div class="menu-icon" onclick="MenuLateral()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <img src="https://i.imgur.com/rNsMmH6.png" alt="Imagem TUB" class="imagemTUB">
+                <div class="logout-icon" onclick="confirmLogout()">
+                    <i class="fas fa-power-off"></i>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="content" id="fiscais-container">
+        <div class="title-and-button">
+            <div class="title">Fiscais:</div>
+            <button class="create-button" onclick="mostrarFormulario()">Criar Fiscal</button>
+        </div>
+        <div class="fiscal-box">
+            <div class="fiscal-info">
+                <p>Nome: João Silva</p>
+                <p>Telefone: 123456789</p>
+                <button class="view-button" onclick="showInfo(this)">Ver Informação</button>
+            </div>
+        </div>
+        <!-- Info repetida - começa aqui  -->
+        <!-- Adicione mais divs com a classe "fiscal-box" conforme necessário para cada fiscal -->
+    </div>
+
+    <div id="formulario-container" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharFormulario()">&times;</span>
+            <h2>Novo Fiscal</h2>
+            <form id="formulario-fiscal">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+                <br><br>
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" name="telefone" required>
+                <br><br>
+                <input type="submit" value="Criar">
+            </form>
+        </div>
+    </div>
+
+    <!-- Menu Lateral -->
+    <div class="menu-lateral" id="menuLateral">
+        <a href="#">Opção 1</a>
+        <a href="#">Opção 2</a>
+        <a href="#">Opção 3</a>
+    </div>
+
+    <script>
+        // Função para confirmar o logout
+        function confirmLogout() {
+            var confirmLogout = confirm("Tem certeza que deseja fazer logout?");
+
+            if (confirmLogout) {
+                window.location.href = "/login";
+            }
+        }
+
+        function MenuLateral() {
+            var menu = document.querySelector('.menu-lateral');
+            menu.classList.toggle('menu-aberto');
+        }
+
+        // Função para mostrar o formulário de criação de fiscal
+        function mostrarFormulario() {
+            var formularioContainer = document.getElementById("formulario-container");
+            formularioContainer.style.display = "block";
+        }
+
+        // Função para fechar o formulário
+        function fecharFormulario() {
+            var formularioContainer = document.getElementById("formulario-container");
+            formularioContainer.style.display = "none";
+        }
+
+        // Evento de submit do formulário
+        document.getElementById("formulario-fiscal").addEventListener("submit", function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // Obtém os valores dos campos do formulário
+            var nome = document.getElementById("nome").value;
+            var telefone = document.getElementById("telefone").value;
+
+            // Cria um novo elemento div com a classe "fiscal-box"
+            var novaFiscalBox = document.createElement("div");
+            novaFiscalBox.classList.add("fiscal-box");
+
+            // Conteúdo da nova fiscal-box com base nos valores do formulário
+            novaFiscalBox.innerHTML = `
+                <div class="fiscal-info">
+                    <p>Nome: ${nome}</p>
+                    <p>Telefone: ${telefone}</p>
+                    <button class="view-button" onclick="showInfo(this)">Ver Informação</button>
+                </div>
+            `;
+
+            // Adiciona a nova fiscal-box ao container de fiscais
+            var fiscaisContainer = document.getElementById("fiscais-container");
+            fiscaisContainer.appendChild(novaFiscalBox);
+
+            // Fecha o formulário após criar o fiscal
+            fecharFormulario();
+
+            // Limpa os campos do formulário para o próximo uso
+            document.getElementById("formulario-fiscal").reset();
+        });
+
+        // Função para mostrar informações do fiscal
+        function showInfo(button) {
+            var fiscalInfo = button.parentElement;
+            alert(fiscalInfo.innerText);
+        }
+    </script>
+</body>
+</html>
