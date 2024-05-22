@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiscalização</title>
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Krona+One%3A400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Estilos CSS */
+        html {
+            font-size: 62.5%;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #004767;
+            font-family: 'Roboto', sans-serif;
+            color: #D9D9D9;
+            font-size: 3rem;
+        }
+        .header-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+        }
+        .header {
+            width: 100%;
+            height: 80px;
+            background-color: #017CB7;
+            margin-bottom: 3rem;
+        }
+        .content {
+            padding-top: 120px;
+            margin-left: 100px;
+        }
+        .menu-icons {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            margin-left: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .logout-icon {
+            margin-left: auto;
+            margin-right: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .imagemTUB {
+            width: 170px;
+            height: 70px;
+            position: absolute;
+            top: 12px;
+            left: 100px;
+        }
+        .menu-icon i, .logout-icon i {
+            font-size: 4rem;
+        }
+        .menu-lateral {
+            position: fixed;
+            top: 80px;
+            left: -415px;
+            width: 372px;
+            height: 100vh;
+            background-color: #017CB7;
+            padding: 20px;
+            transition: left 0.3s ease;
+            z-index: 9999;
+        }
+        .menu-lateral a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+        .menu-lateral.menu-aberto {
+            left: 0;
+        }
+        body.fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+        .perfil {
+            width: 100px;
+            height: 30px;
+            position: absolute;
+            top: 140px;
+            left: 70px;
+        }
+        .imgPerfil {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            left: 64px;
+            top: 250px;
+        }
+        .nome_perfil {
+            position: absolute;
+            top: 380px;
+            margin-left: 550px;
+            color: #D9D9D9;
+            font-size: 3.5rem;
+            font-family: 'Roboto', sans-serif;
+        }
+        .numero_perfil {
+            position: absolute;
+            top: 440px;
+            margin-left: 550px;
+            color: #D9D9D9;
+            font-size: 3.5rem;
+            font-family: 'Roboto', sans-serif;
+        }
+        #editButton, #saveButton {
+            font-size: 2rem;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        #nomeInput {
+            font-size: 3rem;
+            margin-left: 10px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="header">
+            <div class="menu-icons">
+                <div class="menu-icon" onclick="MenuLateral()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <img src="https://i.imgur.com/rNsMmH6.png" alt="Imagem TUB" class="imagemTUB">
+                <div class="logout-icon" onclick="confirmLogout()">
+                    <i class="fas fa-power-off"></i>
+                </div>
+            </div>
+        </div>
+        <img src="https://i.imgur.com/rffavuC.png" alt="Perfil" class="perfil">
+        <img src="https://i.imgur.com/fciabft.png" alt="ImagemPerfil" class="imgPerfil">
+        <div class="nome_perfil">
+            Nome: <span id="nomePerfil">Admin1</span>
+            <button id="editButton">Editar</button>
+            <input type="text" id="nomeInput" style="display: none;">
+            <button id="saveButton" style="display: none;">Salvar</button>
+        </div>
+        <div class="numero_perfil">
+            Numero: 1
+        </div>
+    </div>
+    <div class="menu-lateral" id="menuLateral">
+        <a href="menuinicialrua" class="menu-link">Menu inicial</a>
+        <a href="perfil" class="menu-link">Perfil</a>
+        <a href="fiscaisadmin" class="menu-link">Fiscais</a>
+    </div>
+    <script>
+        function MenuLateral() {
+            var menu = document.querySelector('.menu-lateral');
+            menu.classList.toggle('menu-aberto');
+        }
+
+        function confirmLogout() {
+            var confirmLogout = confirm("Tem certeza que deseja fazer logout?");
+            if (confirmLogout) {
+                window.location.href = "/login";
+            }
+        }
+
+        const menuLinks = document.querySelectorAll('.menu-link');
+        menuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    window.location.href = link.href;
+                }, 500);
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var savedName = localStorage.getItem('nomePerfil');
+            if (savedName) {
+                document.getElementById('nomePerfil').textContent = savedName;
+            }
+        });
+
+        document.getElementById('editButton').addEventListener('click', function() {
+            var nomePerfil = document.getElementById('nomePerfil');
+            var nomeInput = document.getElementById('nomeInput');
+            var saveButton = document.getElementById('saveButton');
+            var editButton = document.getElementById('editButton');
+            nomeInput.value = nomePerfil.textContent;
+            nomePerfil.style.display = 'none';
+            editButton.style.display = 'none';
+            nomeInput.style.display = 'inline';
+            saveButton.style.display = 'inline';
+        });
+
+        document.getElementById('saveButton').addEventListener('click', function() {
+            var nomePerfil = document.getElementById('nomePerfil');
+            var nomeInput = document.getElementById('nomeInput');
+            var saveButton = document.getElementById('saveButton');
+            var editButton = document.getElementById('editButton');
+            var newName = nomeInput.value;
+            nomePerfil.textContent = newName;
+            nomePerfil.style.display = 'inline';
+            editButton.style.display = 'inline';
+            nomeInput.style.display = 'none';
+            saveButton.style.display = 'none';
+            localStorage.setItem('nomePerfil', newName);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+

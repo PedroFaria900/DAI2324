@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Erro</title>
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Krona+One%3A400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400" rel="stylesheet">
+    <style>
+        /* Estilos CSS */
+        html {
+            font-size: 62.5%;
+        }
+        body {
+            width: 100%;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            font-family: 'Roboto', sans-serif;
+            color: #D9D9D9;
+            font-size: 3rem;
+            background-color: #01a7f5;
+            align-items: center;
+        }
+        .login-gD5 {
+            box-sizing: border-box;
+            padding: 5.3rem 2.4rem 17.8rem 2.4rem;
+            width: 100%;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+        }
+        .login-image {
+            width: 100%;
+            max-width: 23rem; /* Defina o tamanho máximo da imagem */
+            margin-bottom: auto;
+            margin-top: 0;
+        }
+        .login-gD5 .quadrado-ZRH {
+            box-sizing: border-box;
+            padding: 2.1rem 2.4rem 6.5rem 2.4rem;
+            width: 45rem; /* Largura do retângulo cinza */
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            background-color: #d9d9d9;
+            border-radius: 2.4rem;
+            border: 1px solid black;
+            margin-top: 3.5rem; /* Ajuste o valor para movê-lo para baixo */
+        }
+        .login-gD5 .quadrado-ZRH .aceder-35Z {
+            width: 100%;
+            max-width: 10rem; /* Defina o tamanho máximo da imagem */
+            margin-bottom: auto;
+            margin-top: 0;
+            margin-bottom: 4.5rem;
+        }
+        .login-gD5 .quadrado-ZRH .utilizador-HEo {
+            width: 7.25rem; /* Largura maior para o ícone Utilizador */
+            margin-bottom: 0.5rem; /* Espaçamento abaixo do texto */
+            margin-right: 28.5rem;
+            text-align: center; /* Centraliza o texto */
+        }
+        .login-gD5 .quadrado-ZRH .palavra-passe-Vrf {
+            width: 10.5rem; /* Largura menor para o ícone Palavra-passe */
+            margin-bottom: 0.5rem; /* Espaçamento abaixo do texto */
+            margin-right: 25rem;
+            text-align: center; /* Centraliza o texto */
+        }
+        .login-gD5 .quadrado-ZRH .nova-imagem {
+            width: 100%;
+            max-width: 30rem; /* Defina o novo tamanho máximo da imagem */
+            margin-bottom: 2rem; /* Ajuste o espaçamento abaixo da imagem */
+        }
+        .login-gD5 .quadrado-ZRH .auto-group-zwtb-LsH {
+            width: 60%;
+            padding: 1rem;
+            font-size: 2rem;
+            color: #fff;
+            background-color: #017cb7;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .login-gD5 .quadrado-ZRH .auto-group-zwtb-LsH:hover {
+            background-color: #015b82;
+        }
+        .input-label {
+            font-size: 2rem;
+            color: #7a7a7a;
+            margin-bottom: 0.5rem;
+        }
+        .input-field {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 2rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+            margin-bottom: 3.5rem;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-gD5">
+        <img src="https://i.imgur.com/BQWFWi1.png" alt="Imagem de Fundo" class="login-image">
+        <div class="quadrado-ZRH">
+            <img src="https://i.imgur.com/eqOWbPT.png" alt="Imagem Aceder" class="aceder-35Z">
+            <img src="https://i.imgur.com/oye8kn1.png" alt="Utilizador"class="utilizador-HEo">
+            <input type="text" id="username" class="input-field" placeholder="Insira o nome de utilizador">
+            <img src="https://i.imgur.com/B4xyYc8.png" alt="Palavra-passe" class="palavra-passe-Vrf">
+            <input type="password" id="password" class="input-field" placeholder="Insira sua senha">
+            <img src="https://i.imgur.com/wovR2Mc.png" alt="Nova Imagem" class="nova-imagem">
+            <button class="auto-group-zwtb-LsH" onclick="login()">Iniciar Sessão</button>
+        </div>
+    </div>
+
+    <script>
+        function login() {
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+    
+            // Credenciais válidas para teste
+            var credenciaisValidasAdmin = {
+                "utilizador1": "senha1",
+                "utilizador2": "senha2",
+                "utilizador3": "senha3"
+            };
+
+            var credenciaisValidasFiscais = {
+                "Fiscal1": "senha1",
+                "Fiscal2": "senha2"
+            };
+    
+            // Verificar se as credenciais inseridas correspondem às credenciais válidas
+            if (credenciaisValidasAdmin[username] && credenciaisValidasAdmin[username] === password) {
+                // Redirecionar para outra página se as credenciais forem válidas
+                window.location.href = "/menuinicialrua";
+            } else {
+                // Redirecionar para a página de erro se as credenciais forem inválidas
+                if (credenciaisValidasFiscais[username] && credenciaisValidasFiscais[username] === password) {
+                    window.location.href = "/fiscaispagina";
+                } else {
+                    window.location.href = "/erro";
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>
+
