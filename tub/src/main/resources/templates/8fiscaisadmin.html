@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiscais Admin</title>
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Krona+One%3A400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> 
+    <style>
+        /* Estilos CSS */
+        html {
+            font-size: 62.5%;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #004767;
+            font-family: 'Roboto', sans-serif;
+            color: #D9D9D9;
+            font-size: 3rem;
+        }
+        .header-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+        }
+        .header {
+            width: 100%;
+            height: 80px;
+            background-color: #017CB7;
+        }
+        .content {
+            padding-top: 120px;
+            margin-left: 100px;
+        }
+        .menu-icons {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            margin-left: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .logout-icon {
+            margin-left: auto;
+            margin-right: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .menu-icon i, .logout-icon i {
+            font-size: 4rem;
+        }
+        .imagemTUB {
+            width: 170px;
+            height: 70px;
+            position: absolute;
+            top: 12px;
+            left: 100px;
+        }
+        .title-and-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 3rem;
+            color: #FFFFFF;
+        }
+        .create-button {
+            background-color: #01A7F5;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 100px;
+            margin-right: 100px;
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+        .fiscal-box {
+            background-color: #d9d9d9;
+            border-radius: 10px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            margin-right: 100px;
+            position: relative;
+        }
+        .fiscal-info {
+            font-size: 2rem;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .fiscal-info span {
+            margin-right: 600px; /* Adiciona espaçamento entre nome e telefone */
+        }
+        .view-button {
+            background-color: #01A7F5;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+        /* Estilos do formulário */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #004767;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="submit"] {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        input[type="submit"] {
+            background-color: #01A7F5;
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+        }
+        .delete-button {
+            background-color: #FF5733;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .menu-lateral {
+            position: fixed;
+            top: 80px;
+            left: -415px; /* Inicialmente fora da tela */
+            width: 372px;
+            height: 100vh;
+            background-color: #017CB7;
+            padding: 20px;
+            transition: left 0.3s ease;
+            z-index: 9999;
+        }
+
+        .menu-lateral a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+        .menu-lateral.menu-aberto {
+            left: 0; /* Quando aberto, aparece na tela */
+        }
+
+        /* Novo estilo para o contador de fiscais */
+        .contador-fiscais {
+            font-size: 2rem;
+            color: #FFFFFF;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="header">
+            <div class="menu-icons">
+                <div class="menu-icon" onclick="MenuLateral()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <img src="https://i.imgur.com/rNsMmH6.png" alt="Imagem TUB" class="imagemTUB">
+                <div class="logout-icon" onclick="confirmLogout()">
+                    <i class="fas fa-power-off"></i>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="content" id="fiscais-container">
+        <div class="title-and-button">
+            <div class="title">Fiscais:</div>
+            <button class="create-button" onclick="mostrarFormulario()">Criar Fiscal</button>
+        </div>
+        <div class="contador-fiscais" id="contador-fiscais">Número de fiscais: 0</div> <!-- Novo elemento -->
+    </div>
+
+    <div id="formulario-container" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharFormulario()">&times;</span>
+            <h2>Novo Fiscal</h2>
+            <form id="formulario-fiscal">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" name="nome" required>
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" name="telefone" required>
+                <input type="submit" value="Criar">
+            </form>
+        </div>
+    </div>
+
+    <!-- Formulário de Edição -->
+    <div id="editar-formulario-container" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharEditarFormulario()">&times;</span>
+            <h2>Editar Fiscal</h2>
+            <form id="editar-formulario-fiscal">
+                <label for="edit-nome">Nome:</label>
+                <input type="text" id="edit-nome" name="edit-nome" required>
+                <label for="edit-telefone">Telefone:</label>
+                <input type="text" id="edit-telefone" name="edit-telefone" required>
+                <input type="submit" value="Salvar">
+            </form>
+            <button class="delete-button" onclick="deletarFiscal()">Excluir</button> <!-- Botão para deletar -->
+        </div>
+    </div>
+
+    <!-- Menu Lateral -->
+    <div class="menu-lateral" id="menuLateral">
+        <a href="menuinicialrua" class="menu-link">Menu inicial</a>
+        <a href="perfil" class="menu-link">Perfil</a>
+        <a href="fiscaisadmin" class="menu-link">Fiscais</a>
+    </div>
+
+    <script>
+        // Event listener para fechar o menu lateral clicando fora dele
+        window.addEventListener('mouseup', function(event){
+            var menuLateral = document.getElementById('menuLateral');
+            var menuIcon = document.querySelector('.menu-icon');
+
+            if (event.target != menuLateral && event.target.parentNode != menuLateral && event.target != menuIcon) {
+                menuLateral.classList.remove('menu-aberto');
+            }
+        });
+
+        // Função para confirmar logout
+        function confirmLogout() {
+            if (confirm("Tem certeza que deseja fazer logout?")) {
+                window.location.href = "login";
+            }
+        }
+
+        // Função para abrir e fechar o menu lateral
+        function MenuLateral() {
+            var menuLateral = document.getElementById("menuLateral");
+            menuLateral.classList.toggle("menu-aberto");
+        }
+
+        // Função para mostrar o formulário de criação de fiscal
+        function mostrarFormulario() {
+            document.getElementById("formulario-container").style.display = "block";
+        }
+
+        // Função para fechar o formulário de criação de fiscal
+        function fecharFormulario() {
+            document.getElementById("formulario-container").style.display = "none";
+        }
+
+        // Evento de submit do formulário de criação de fiscal
+        document.getElementById("formulario-fiscal").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var nome = document.getElementById("nome").value;
+            var telefone = document.getElementById("telefone").value;
+            criarFiscal(nome, telefone);
+            fecharFormulario();
+        });
+
+        // Função para criar um fiscal na lista
+        function criarFiscal(nome, telefone) {
+            var fiscaisContainer = document.getElementById("fiscais-container");
+
+            var fiscalBox = document.createElement("div");
+            fiscalBox.className = "fiscal-box";
+            fiscalBox.setAttribute("data-nome", nome);
+            fiscalBox.setAttribute("data-telefone", telefone);
+
+            var fiscalInfo = document.createElement("div");
+            fiscalInfo.className = "fiscal-info";
+            fiscalInfo.innerHTML = "<span><strong>Nome:</strong> " + nome + "</span> <span><strong>Telefone:</strong> " + telefone + "</span>";
+
+            var viewButton = document.createElement("button");
+            viewButton.className = "view-button";
+            viewButton.innerText = "Editar";
+            viewButton.onclick = function() {
+                mostrarEditarFormulario(fiscalBox);
+            };
+
+            fiscalBox.appendChild(fiscalInfo);
+            fiscalBox.appendChild(viewButton);
+
+            fiscaisContainer.appendChild(fiscalBox);
+
+            atualizarContadorFiscais(); // Atualiza o contador após adicionar um fiscal
+            salvarFiscais(); // Salva os fiscais no localStorage
+        }
+
+        // Função para mostrar o formulário de edição de fiscal
+        function mostrarEditarFormulario(fiscalBox) {
+            document.getElementById("editar-formulario-container").style.display = "block";
+            var nome = fiscalBox.getAttribute("data-nome");
+            var telefone = fiscalBox.getAttribute("data-telefone");
+
+            document.getElementById("edit-nome").value = nome;
+            document.getElementById("edit-telefone").value = telefone;
+
+            document.getElementById("editar-formulario-fiscal").onsubmit = function(event) {
+                event.preventDefault();
+                editarFiscal(fiscalBox);
+                fecharEditarFormulario();
+            };
+
+            document.getElementById("deletar-fiscal").onclick = function() {
+                deletarFiscal(fiscalBox);
+            };
+        }
+
+        // Função para fechar o formulário de edição de fiscal
+        function fecharEditarFormulario() {
+            document.getElementById("editar-formulario-container").style.display = "none";
+        }
+
+        // Função para editar um fiscal na lista
+        function editarFiscal(fiscalBox) {
+            var novoNome = document.getElementById("edit-nome").value;
+            var novoTelefone = document.getElementById("edit-telefone").value;
+
+            fiscalBox.setAttribute("data-nome", novoNome);
+            fiscalBox.setAttribute("data-telefone", novoTelefone);
+
+            var fiscalInfo = fiscalBox.querySelector(".fiscal-info");
+            fiscalInfo.innerHTML = "<span><strong>Nome:</strong> " + novoNome + "</span> <span><strong>Telefone:</strong> " + novoTelefone + "</span>";
+
+            salvarFiscais(); // Salva os fiscais no localStorage após a edição
+            atualizarContadorFiscais(); // Atualiza o contador após editar um fiscal
+        }
+
+        // Função para deletar um fiscal da lista
+        function deletarFiscal(fiscalBox) {
+            if (confirm("Tem certeza que deseja excluir este fiscal?")) {
+                fiscalBox.remove();
+                fecharEditarFormulario();
+                atualizarContadorFiscais(); // Atualiza o contador após deletar um fiscal
+                salvarFiscais(); // Salva os fiscais no localStorage após a exclusão
+            }
+        }
+
+        // Função para atualizar o contador de fiscais
+        function atualizarContadorFiscais() {
+            var contador = document.getElementById("contador-fiscais");
+            var numeroFiscais = document.querySelectorAll(".fiscal-box").length;
+            contador.innerText = "Número de fiscais: " + numeroFiscais;
+        }
+
+        // Carregar os fiscais do localStorage ao carregar a página
+        document.addEventListener("DOMContentLoaded", function() {
+            carregarFiscais();
+        });
+
+        // Função para salvar fiscais no localStorage
+        function salvarFiscais() {
+            var fiscais = [];
+            var fiscaisContainer = document.getElementById("fiscais-container");
+            var fiscalBoxes = fiscaisContainer.getElementsByClassName("fiscal-box");
+
+            for (var i = 0; i < fiscalBoxes.length; i++) {
+                var nome = fiscalBoxes[i].getAttribute("data-nome");
+                var telefone = fiscalBoxes[i].getAttribute("data-telefone");
+
+                fiscais.push({ nome: nome, telefone: telefone });
+            }
+
+            localStorage.setItem("fiscais", JSON.stringify(fiscais));
+        }
+
+        // Função para carregar fiscais do localStorage
+        function carregarFiscais() {
+            var fiscaisContainer = document.getElementById("fiscais-container");
+            var fiscais = JSON.parse(localStorage.getItem("fiscais")) || [];
+
+            fiscais.forEach(function(fiscal) {
+                var fiscalBox = document.createElement("div");
+                fiscalBox.className = "fiscal-box";
+                fiscalBox.setAttribute("data-nome", fiscal.nome);
+                fiscalBox.setAttribute("data-telefone", fiscal.telefone);
+
+                var fiscalInfo = document.createElement("div");
+                fiscalInfo.className = "fiscal-info";
+                fiscalInfo.innerHTML = "<span><strong>Nome:</strong> " + fiscal.nome + "</span> <span><strong>Telefone:</strong> " + fiscal.telefone + "</span>";
+
+                var viewButton = document.createElement("button");
+                viewButton.className = "view-button";
+                viewButton.innerText = "Editar";
+                viewButton.onclick = function() {
+                    mostrarEditarFormulario(fiscalBox);
+                };
+
+                fiscalBox.appendChild(fiscalInfo);
+                fiscalBox.appendChild(viewButton);
+
+                fiscaisContainer.appendChild(fiscalBox);
+            });
+
+            atualizarContadorFiscais(); // Atualiza o contador de fiscais após carregar
+        }
+    </script>
+    
+</body>
+</html>

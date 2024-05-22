@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Inicial Rua</title>
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Krona+One%3A400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400" rel="stylesheet">
+    <!-- Esta biblioteca é uma biblioteca de icon que o chatgpt me aconcelhou eu usei para o icon de menu e do logout-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> 
+    <style>
+        /* Estilos CSS */
+        html {
+            font-size: 62.5%;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #004767;
+            font-family: 'Roboto', sans-serif;
+            color: #D9D9D9;
+            font-size: 3rem;
+        }
+        .header-container { /*Isto serve para não desformatar os elementos do header */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+        }
+        .header {
+            width: 100%; /* 100% da largura do corpo */
+            height: 80px; /* Altura do cabeçalho */
+            background-color: #017CB7; /* Cor de fundo do cabeçalho */
+            margin-bottom: 6rem;
+        }
+        .content {
+            padding-top: 120px; /* Adicione um espaçamento igual à altura do cabeçalho */
+            margin-left: 100px; /* Adicionando margem à esquerda */
+        }
+        /*Nesta parte usei uma biblioteca de icons*/
+        .menu-icons {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            margin-left: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .logout-icon {
+            margin-left: auto; /* Move o ícone para a direita */
+            margin-right: 30px; /* Adiciona uma margem à direita para separação */
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .imagemTUB {
+            width: 170px;
+            height: 70px;
+            position: absolute;
+            top: 12px;
+            left: 100px; /* Ajuste a posição horizontal aqui */
+        }
+        .menu-icon i, .logout-icon i {
+            font-size: 4rem;
+        }
+        .imagemEstacionamento {
+            width: 563px;
+            height: 348px;
+            margin-left: 100px;
+            margin-bottom: 1rem;
+        }
+        .texto-rua-estacionamentos {
+            position: absolute;
+            top: 520px; /* Ajuste a posição vertical do texto */
+            margin-left: 100px; /* Ajuste a posição horizontal do texto */
+            color: #D9D9D9;
+            font-size: 2rem;
+            font-family: 'Roboto', sans-serif;
+        }
+        .imagemRetanguloEstatisticas {
+            width: 420px; 
+            height: 590px; 
+            margin-left: 1050px;
+            position: absolute;
+            top: 110px;
+        }
+        .imagemEstatisticasCima {
+            width: 530px;
+            height: 74px;
+            position: absolute;
+            top: 20px;
+            left: 0;
+            z-index: 1; /* Coloca a imagem por cima */
+        }
+        .imagemParteEsperada{
+            width: 460px;
+            height:99px;
+            position: absolute;
+            top: 135px;
+            left: 40px;
+            z-index: 1;
+        }
+        .botaoParteEsperada {
+            background-color: #D9D9D9;
+            position: absolute;
+            width: 150px; /* ajuste conforme necessário */
+            height: 23px; /* ajuste conforme necessário */
+            top: 215px;
+            left: 350px;
+            border: none;
+            cursor: pointer;
+            z-index: 1; 
+            font-family: 'Roboto', sans-serif;
+            color: #01A7F5; /* Escolha a cor do texto desejada */
+            text-decoration: underline;
+            font-size: 1.8rem;
+        }
+        .menu-lateral {
+            position: fixed;
+            top: 80px;
+            left: -415px; /* Inicialmente fora da tela */
+            width: 372px;
+            height: 100vh;
+            background-color: #017CB7;
+            padding: 20px;
+            transition: left 0.3s ease;
+            z-index: 999;
+        }
+
+        .menu-lateral a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+        .menu-lateral.menu-aberto {
+            left: 0; /* Quando aberto, aparece na tela */
+        }
+        /* Adiciona um estilo para a transição de fade-out */
+        body.fade-out {
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+        }
+        .imagemSobreposta {
+            position: absolute;
+            top: 160px; /* Ajuste conforme necessário */
+            left: 249px; /* Ajuste conforme necessário */
+            width: 50px; /* Ajuste a largura conforme necessário */
+            height: 50px; /* A altura será ajustada automaticamente para manter a proporção */
+            z-index: 2; /* Coloca a imagem sobre as outras */
+        }
+        .textoSobreposto {
+            position: absolute;
+            top: 175px; /* Ajuste conforme necessário */
+            left: 249px; /* Ajuste conforme necessário */
+            color: #017CB7; /* Cor do texto */
+            font-size: 24px; /* Tamanho da fonte */
+            font-family: 'Roboto', sans-serif; /* Fonte */
+            z-index: 3; /* Coloca o texto sobre a imagem */
+        }
+        .imagemSobreposta2 {
+            position: absolute;
+            top: 205px; /* Ajuste conforme necessário */
+            left: 235px; /* Ajuste conforme necessário */
+            width: 50px; /* Ajuste a largura conforme necessário */
+            height: 50px; /* A altura será ajustada automaticamente para manter a proporção */
+            z-index: 2; /* Coloca a imagem sobre as outras */
+        }
+        .textoSobreposto2 {
+            position: absolute;
+            top: 208px; /* Ajuste conforme necessário */
+            left: 233px; /* Ajuste conforme necessário */
+            color: #017CB7; /* Cor do texto */
+            font-size: 24px; /* Tamanho da fonte */
+            font-family: 'Roboto', sans-serif; /* Fonte */
+            z-index: 3; /* Coloca o texto sobre a imagem */
+        }
+        .imagemSobreposta3{
+            position: absolute;
+            top: 205px; /* Ajuste conforme necessário */
+            left: 350px; /* Ajuste conforme necessário */
+            width: 150px; /* Ajuste a largura conforme necessário */
+            height: 50px; /* A altura será ajustada automaticamente para manter a proporção */
+            z-index: 2; /* Coloca a imagem sobre as outras */
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="header">
+            <div class="menu-icons">
+                <div class="menu-icon" onclick="MenuLateral()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <img src="https://i.imgur.com/rNsMmH6.png" alt="Imagem TUB" class="imagemTUB">
+                <div class="logout-icon" onclick ="confirmLogout()">
+                    <i class="fas fa-power-off"></i>
+                </div>
+            </div>
+        </div>
+    <img src="https://i.imgur.com/6kupv0T.png" alt="Imagem Estacionamento" class="imagemEstacionamento">
+    <div class="texto-rua-estacionamentos">
+        Avenida Central
+    </div>
+    <div class="imagemRetanguloEstatisticas">
+        <img src="https://i.imgur.com/WGapkNM.png" alt="Retangulo Estatisticas" class="imagemRetangulo">
+        <img src="https://i.imgur.com/Zj5gwVW.png" alt="Parte Cima Stats" class="imagemEstatisticasCima">
+        <img src="https://i.imgur.com/vq5RsnA.png" alt="Parte Esperada" class="imagemParteEsperada"> 
+        <img src="https://i.imgur.com/WGapkNM.png" alt="Imagem Sobreposta" class="imagemSobreposta">
+        <img src="https://i.imgur.com/WGapkNM.png" alt="Imagem Sobreposta2" class="imagemSobreposta2">
+        <img src="https://i.imgur.com/WGapkNM.png" alt="Imagem Sobreposta3" class="imagemSobreposta3">
+        <div class="textoSobreposto">
+            47
+        </div>
+        <div class="textoSobreposto2">
+            0
+        </div>
+    </div>    
+    </div> 
+
+    <!-- Menu Lateral -->
+    <div class="menu-lateral" id="menuLateral">
+        <a href="Condutorpageinicial" class="menu-link">Menu incial</a>
+        <a href="Condutorperfil" class="menu-link">Perfil</a>
+    </div>
+
+    <script>
+        function confirmLogout() {
+            var confirmLogout = confirm("Tem certeza que deseja fazer logout?");
+
+            if (confirmLogout) {
+                window.location.href = "/login";
+            }
+        }
+
+        function verMatriculas(){
+            window.location.href = "/matriculas";
+        }
+
+        function MenuLateral() {
+            var menu = document.querySelector('.menu-lateral');
+            menu.classList.toggle('menu-aberto');
+        }
+
+        const menuLinks = document.querySelectorAll('.menu-link');
+
+        // Adiciona um evento de clique a cada link
+        menuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); // Impede o comportamento padrão de navegação
+
+                // Adiciona uma classe para animação de transição
+                document.body.classList.add('fade-out');
+
+                // Navega para a nova página após um pequeno intervalo para a animação
+                setTimeout(() => {
+                    window.location.href = link.href;
+                }, 500); // 500 milissegundos (0.5 segundos) - ajuste conforme necessário
+            });
+        });
+    </script>
+    
+</body>
+</html>
