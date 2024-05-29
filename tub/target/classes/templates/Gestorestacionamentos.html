@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estacionamentos Admin</title>
+    <link rel="icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/css?family=Krona+One%3A400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro%3A400" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> 
+    <style>
+        /* Estilos CSS */
+        html {
+            font-size: 62.5%;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #004767;
+            font-family: 'Roboto', sans-serif;
+            color: #D9D9D9;
+            font-size: 3rem;
+        }
+        .header-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 999;
+        }
+        .header {
+            width: 100%;
+            height: 80px;
+            background-color: #017CB7;
+        }
+        .content {
+            padding-top: 120px;
+            margin-left: 100px;
+        }
+        .menu-icons {
+            display: flex;
+            align-items: center;
+        }
+        .menu-icon {
+            margin-left: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .logout-icon {
+            margin-left: auto;
+            margin-right: 30px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .menu-icon i, .logout-icon i {
+            font-size: 4rem;
+        }
+        .imagemTUB {
+            width: 170px;
+            height: 70px;
+            position: absolute;
+            top: 12px;
+            left: 100px;
+        }
+        .title-and-button {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .title {
+            font-size: 3rem;
+            color: #FFFFFF;
+        }
+        .create-button {
+            background-color: #01A7F5;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 100px;
+            margin-right: 100px;
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+        .estacionamento-box {
+            background-color: #d9d9d9;
+            border-radius: 10px;
+            padding: 5px;
+            margin-top: 20px;
+            margin-right: 100px;
+            position: relative;
+        }
+        .estacionamento-info {
+            font-size: 2rem;
+            color: #333;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .view-button {
+            background-color: #01A7F5;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+        /* Estilos do formulário */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        .modal-content {
+            background-color: #004767;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="submit"] {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        input[type="submit"] {
+            background-color: #01A7F5;
+            color: #FFFFFF;
+            border: none;
+            cursor: pointer;
+        }
+        .delete-button {
+            background-color: #FF5733;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 1.6rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .menu-lateral {
+            position: fixed;
+            top: 80px;
+            left: -415px; /* Inicialmente fora da tela */
+            width: 372px;
+            height: 100vh;
+            background-color: #017CB7;
+            padding: 20px;
+            transition: left 0.3s ease;
+            z-index: 9999;
+        }
+
+        .menu-lateral a {
+            display: block;
+            color: #fff;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+        .menu-lateral.menu-aberto {
+            left: 0; /* Quando aberto, aparece na tela */
+        }
+
+        /* Novo estilo para o contador de estacionamentos */
+        .contador-estacionamentos {
+            font-size: 2rem;
+            color: #FFFFFF;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        <div class="header">
+            <div class="menu-icons">
+                <div class="menu-icon" onclick="MenuLateral()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <img src="https://i.imgur.com/rNsMmH6.png" alt="Imagem TUB" class="imagemTUB">
+                <div class="logout-icon" onclick="confirmLogout()">
+                    <i class="fas fa-power-off"></i>
+                </div>
+            </div>
+        </div>
+    </div> 
+    <div class="content" id="estacionamentos-container">
+        <div class="title-and-button">
+            <div class="title">Estacionamento:</div>
+            <button class="create-button" onclick="mostrarFormulario()">Criar Estacionamento</button>
+        </div>
+        <div class="contador-estacionamentos" id="contador-estacionamentos">Número de Estacionamentos: 0</div> <!-- Novo elemento -->
+    </div>
+
+    <div id="formulario-container" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharFormulario()">&times;</span>
+            <h2>Novo Estacionamento</h2>
+            <form id="formulario-estacionamento">
+                <label for="nome">Nome Rua:</label>
+                <input type="text" id="nome" name="nome" required>
+                <br><br>
+                <label for="numeroLugar">Número Lugar:</label>
+                <input type="text" id="numeroLugar" name="numeroLugar" required>
+                <br><br>
+                <label for="estado">Estado: </label>
+                <input type="text" id="estado" name="estado" required>
+                <br><br>
+                <input type="submit" value="Criar">
+            </form>
+        </div>
+    </div>
+
+    <!-- Formulário de Edição -->
+    <div id="editar-formulario-container" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharEditarFormulario()">&times;</span>
+            <h2>Editar Estacionamento</h2>
+            <form id="editar-formulario-estacionamento">
+                <label for="edit-nome">Nome Rua:</label>
+                <input type="text" id="edit-nome" name="edit-nome" required>
+                <br><br>
+                <label for="edit-numeroLugar">Número Lugar:</label>
+                <input type="text" id="edit-numeroLugar" name="edit-numeroLugar" required>
+                <br><br>
+                <label for="edit-estado">Estado:</label>
+                <input type="text" id="edit-estado" name="edit-estado" required>
+                <br><br>
+                <input type="submit" value="Salvar">
+            </form>
+            <button class="delete-button" onclick="apagarEstacionamento()">Excluir</button> <!-- Botão para deletar -->
+        </div>
+    </div>
+
+    <!-- Menu Lateral -->
+    <div class="menu-lateral" id="menuLateral">
+        <a href="Gestorpagina" class="menu-link">Menu Gestor</a>
+        <a href="Gestorperfil" class="menu-link">Perfil</a>
+    </div>
+
+    <script>
+        var estacionamentoAtual; // Variável global para armazenar o estacionamento atual
+
+        // Função para confirmar o logout
+        function confirmLogout() {
+            var confirmLogout = confirm("Tem certeza que deseja fazer logout?");
+            if (confirmLogout) {
+                window.location.href = "/login";
+            }
+        }
+
+        function MenuLateral() {
+            var menu = document.querySelector('.menu-lateral');
+            menu.classList.toggle('menu-aberto');
+        }
+
+        // Função para mostrar o formulário de criação de estacionamentos
+        function mostrarFormulario() {
+            var formularioContainer = document.getElementById("formulario-container");
+            formularioContainer.style.display = "block";
+        }
+
+        // Evento de submit do formulário
+        // OBJETO LÓGICO : CRIAR ESTACIONAMENTO
+        document.getElementById("formulario-estacionamento").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            var nome = document.getElementById("nome").value;
+            var numeroLugar = document.getElementById("numeroLugar").value;
+            var estado = document.getElementById("estado").value;
+
+            var novoEstacionamentoBox = document.createElement("div");
+            novoEstacionamentoBox.classList.add("estacionamento-box");
+
+            novoEstacionamentoBox.innerHTML = `
+                <div class="estacionamento-info">
+                    <p>Nome Rua: ${nome}</p>
+                    <p>Número Lugar: ${numeroLugar}</p>
+                    <p>Estado: ${estado}</p>
+                    <button class="view-button">Editar Estacionamento</button>
+                </div>
+            `;
+
+            var estacionamentosContainer = document.getElementById("estacionamentos-container");
+            estacionamentosContainer.appendChild(novoEstacionamentoBox);
+
+            novoEstacionamentoBox.querySelector('.view-button').addEventListener('click', editarEstacionamento);
+
+            salvarEstacionamentos(); // Salvar no localStorage
+            fecharFormulario();
+            document.getElementById("formulario-estacionamento").reset();
+            atualizarContadorEstacionamentos(); // Atualizar o contador de estacionamentos
+        });
+
+        // Função para fechar o formulário
+        function fecharFormulario() {
+            var formularioContainer = document.getElementById("formulario-container");
+            formularioContainer.style.display = "none";
+        }
+
+        // Função para fechar o formulário de edição
+        function fecharEditarFormulario() {
+            var editarFormularioContainer = document.getElementById("editar-formulario-container");
+            editarFormularioContainer.style.display = "none";
+        }
+
+        // Função para mostrar informações do estacionamento para edição
+        // OBJETO LÓGICO: EDITAR ESTACIONAMENTO
+        function editarEstacionamento(event) {
+            var estacionamentoBox = event.target.closest('.estacionamento-box');
+            estacionamentoAtual = estacionamentoBox; // Armazenar o estacionamento atual
+
+            var nomeElement = estacionamentoBox.querySelector('.estacionamento-info p:nth-child(1)');
+            var numeroLugarElement = estacionamentoBox.querySelector('.estacionamento-info p:nth-child(2)');
+            var estadoElement = estacionamentoBox.querySelector('.estacionamento-info p:nth-child(3)');
+
+            var nomeAtual = nomeElement.textContent.split(':')[1].trim();
+            var numeroLugarAtual = numeroLugarElement.textContent.split(':')[1].trim();
+            var estadoAtual = estadoElement.textContent.split(':')[1].trim();
+
+            document.getElementById('edit-nome').value = nomeAtual;
+            document.getElementById('edit-numeroLugar').value = numeroLugarAtual;
+            document.getElementById('edit-estado').value = estadoAtual;
+
+            document.getElementById('editar-formulario-container').style.display = 'block';
+
+            document.getElementById('editar-formulario-estacionamento').onsubmit = function(e) {
+                e.preventDefault();
+                
+                var nomeEditado = document.getElementById('edit-nome').value;
+                var numeroLugarEditado = document.getElementById('edit-numeroLugar').value;
+                var estadoEditado = document.getElementById('edit-estado').value;
+
+                nomeElement.textContent = 'Nome Rua: ' + nomeEditado;
+                numeroLugarElement.textContent = 'Número Lugar: ' + numeroLugarEditado;
+                estadoElement.textContent = 'Estado: ' + estadoEditado;
+
+                fecharEditarFormulario();
+                salvarEstacionamentos(); // Salvar as alterações no localStorage
+                atualizarContadorEstacionamentos(); // Atualizar o contador de estacionamentos
+            };
+        }
+
+        // Função para apagar o estacionamento
+        // OBJETO LÓGICO: ELIMINAR ESTACIONAMENTO
+        function apagarEstacionamento() {
+            estacionamentoAtual.remove(); // Remover o estacionamento atual da página
+            fecharEditarFormulario();
+            salvarEstacionamentos(); // Atualizar o localStorage
+            atualizarContadorEstacionamentos(); // Atualizar o contador de estacionamentos
+        }
+
+
+        // Função para salvar estacionamentos no localStorage
+        function salvarEstacionamentos() {
+            var estacionamentos = [];
+            var estacionamentosContainer = document.getElementById("estacionamentos-container");
+            var estacionamentoBoxes = estacionamentosContainer.getElementsByClassName("estacionamento-box");
+
+            for (var i = 0; i < estacionamentoBoxes.length; i++) {
+                var nome = estacionamentoBoxes[i].querySelector(".estacionamento-info p:nth-child(1)").textContent.split(':')[1].trim();
+                var numeroLugar = estacionamentoBoxes[i].querySelector(".estacionamento-info p:nth-child(2)").textContent.split(':')[1].trim();
+                var estado = estacionamentoBoxes[i].querySelector(".estacionamento-info p:nth-child(3)").textContent.split(':')[1].trim();
+
+                estacionamentos.push({ nome: nome, numeroLugar: numeroLugar, estado: estado });
+            }
+
+            localStorage.setItem("estacionamentos", JSON.stringify(estacionamentos));
+        }
+
+        // Função para carregar estacionamentos do localStorage
+        function carregarEstacionamentos() {
+            var estacionamentos = JSON.parse(localStorage.getItem("estacionamentos"));
+
+            if (estacionamentos) {
+                for (var i = 0; i < estacionamentos.length; i++) {
+                    var novoEstacionamentoBox = document.createElement("div");
+                    novoEstacionamentoBox.classList.add("estacionamento-box");
+
+                    novoEstacionamentoBox.innerHTML = `
+                        <div class="estacionamento-info">
+                            <p>Nome Rua: ${estacionamentos[i].nome}</p>
+                            <p>Número Lugar: ${estacionamentos[i].numeroLugar}</p>
+                            <p>Estado: ${estacionamentos[i].estado}</p>
+                            <button class="view-button">Editar Estacionamento</button>
+                        </div>
+                    `;
+
+                    var estacionamentosContainer = document.getElementById("estacionamentos-container");
+                    estacionamentosContainer.appendChild(novoEstacionamentoBox);
+
+                    novoEstacionamentoBox.querySelector('.view-button').addEventListener('click', editarEstacionamento);
+                }
+                atualizarContadorEstacionamentos(); // Atualizar o contador de estacionamentos ao carregar
+            }
+        }
+
+        // OBJETO LÓGICO : NUMERO DE LUGARES DE ESTACIONAMENTO
+        // Função para atualizar o contador de estacionamentos
+        function atualizarContadorEstacionamentos() {
+            var estacionamentosContainer = document.getElementById("estacionamentos-container");
+            var estacionamentoBoxes = estacionamentosContainer.getElementsByClassName("estacionamento-box");
+            var contadorEstacionamentos = document.getElementById("contador-estacionamentos");
+            contadorEstacionamentos.textContent = "Número de Estacionamentos: " + estacionamentoBoxes.length;
+        }
+
+        // Carregar estacionamentos ao carregar a página
+        window.onload = carregarEstacionamentos;
+
+        const menuLinks = document.querySelectorAll('.menu-link');
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                document.body.classList.add('fade-out');
+                setTimeout(() => {
+                    window.location.href = link.href;
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html>
